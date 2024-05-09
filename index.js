@@ -7,10 +7,13 @@ const venderRoutes = require('./routes/venderRoutes')
 const firmRoutes = require('./routes/firmRoutes')
 const productRoutes =  require('./routes/productRoutes')
 const path = require('path')
+const cors = require('cors')
 
 const app = express()
-const PORT = process.env.PORT || 5000;
+
+const PORT = process.env.PORT || 4000;
 dotenv.config();
+app.use(cors())
 
 //mongoDB connection
 mongoose.connect(process.env.MONGO_URI).then(()=>{
