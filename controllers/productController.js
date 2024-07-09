@@ -32,7 +32,7 @@ const addProduct = async(req,res)=>{
         })
 
         const savedProduct = await product.save();
-
+        const productname= savedProduct.productName;
         firm.products.push(savedProduct)
 
         await firm.save()
@@ -64,6 +64,46 @@ const addProduct = async(req,res)=>{
         }
     }
 
+    const getProductByProductname = async(req, res)=>{
+        try {
+            const productId = req.params.productId;
+            const product = await Product.findById(productId);
+            if(!product){
+                return res.status(404).json({error: "Product not found"})
+            }
+            const productname = product.productName
+            const products = await Product.find({product: productId}) 
+            res.status(200).json({productname})
+        } catch (error) {
+            console.error(error)
+            res.status(500).json({ error: "Internal server error" })
+        }
+    }
+    const getProductByProductName = async(req,res)=>{
+        try {
+            const productname = req.params.productName;
+            const product = await Product.findOne({productname})
+            if(!product){
+                return res.status(404).json("product not found")
+            }
+            res.status(200).json({product})
+         } catch (error) {
+            console.error(error)
+            res.status(500).json({ error: "Internal server error" })
+        }
+    }
+    const getAllProducts =  async(req,res)=>{
+        try {
+            const products = await Product.find();
+            if(products){
+                return res.status(404).json("products not found")
+            }
+        } catch (error) {
+            console.error(error)
+            res.status(500).json({ error: "Internal server error" })
+        }
+    }
+
     const deleteProductById = async(req, res) => {
         try {
             const productId = req.params.productId;
@@ -80,4 +120,4 @@ const addProduct = async(req,res)=>{
         }
     }
     
-    module.exports = { addProduct: [upload.single('image'), addProduct], getProductByFirm, deleteProductById };
+    module.exports = { addProduct: [upload.single('image'), addProduct], getProductByFirm, deleteProductById, getProductByProductname, getProductByProductName, getAllProducts };
